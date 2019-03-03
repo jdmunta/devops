@@ -27,9 +27,9 @@ do
 done
 
 # MySQL Startup
-/etc/init.d/mysqld start 
+/etc/init.d/mysqld start
 
-#mysqladmin --user root password "'"$MYSQL_USERPWD}"'" 
+#mysqladmin --user root password "'"$MYSQL_USERPWD}"'"
 
 mysql -u root mysql<${DB_SCRIPT_ROOT}
 
@@ -39,9 +39,13 @@ echo "user=${MYSQL_USER}" >>$MY_CNF
 echo "password=${MYSQL_USERPWD}" >>$MY_CNF
 
 mysql -u ${MYSQL_USER} <${DB_SCRIPT_USER}
-echo "Start population of ${MYSQL_DB} with ${MYSQL_INIT_SQL}"
-mysql -u ${MYSQL_USER} myapp <${MYSQL_INIT_SQL}
-echo "End population of ${MYSQL_DB} with ${MYSQL_INIT_SQL}"
+for SQL_FILE in `echo ${MYSQL_INIT_SQL}|sed 's/,/ /g'`
+do
+  echo "Start population of ${MYSQL_DB} with ${SQL_FILE}"
+  echo mysql -u ${MYSQL_USER} ${MYSQL_DB}
+  mysql -u ${MYSQL_USER} ${MYSQL_DB} --force <${SQL_FILE}
+  echo "End population of ${MYSQL_DB} with ${SQL_FILE}"
+done
 rm $MY_CNF
 
 DB_INIT=mysql-init.sql
@@ -49,7 +53,7 @@ echo "FLUSH PRIVILEGES;" >${DB_INIT}
 #echo ALTER USER "'"root"'"@"'"localhost"'" IDENTIFIED BY  "'"${MYSQL_USERPWD}"'" ';' >>${DB_INIT}
 if [ ! "$REMOVE_ROOT" == "yes" ]; then
   if [ "$MYSQL_ROOTPWD" == "" ]; then
-        echo  'UPDATE mysql.user SET password=PASSWORD('"'"${MYSQL_USERPWD}"'"')' where user="'"root"'" ';' >>${DB_INIT}  
+        echo  'UPDATE mysql.user SET password=PASSWORD('"'"${MYSQL_USERPWD}"'"')' where user="'"root"'" ';' >>${DB_INIT}
   else
         echo  'UPDATE mysql.user SET password=PASSWORD('"'"${MYSQL_ROOTPWD}"'"')' where user="'"root"'" ';' >>${DB_INIT}
   fi
@@ -59,6 +63,6 @@ fi
 echo 'commit;' >>${DB_INIT}
 mysql -u root mysql <${DB_INIT}
 
-/etc/init.d/mysqld restart 
+/etc/init.d/mysqld restart
 
 tail -f /var/log/mysqld.log

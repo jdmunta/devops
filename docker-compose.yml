@@ -7,8 +7,8 @@ services:
     image: myapp/myappserver:1.0
     ports: 
      - "80:8080"
-    #volumes:
-    # - D:/apps:/opt/tomcat/webapps
+    volumes:
+     - D:/apps:/opt/tomcat/webapps
     links:
      - myappdb
 
