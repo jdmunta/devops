@@ -1,4 +1,6 @@
 
 minikube start
 kubectl create -f myappvolumes.yaml
-kubectl create secret generic myappdb-pass --from-literal=password=myapp
+kubectl get persistentvolumes
+kubectl apply -f myappdb.yaml
+kubectl apply -f myappserver.yaml

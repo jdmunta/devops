@@ -28,7 +28,7 @@ spec:
     requests:
       storage: 3Gi
 ---
-apiVersion: v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: myappdb
@@ -37,30 +37,30 @@ spec:
     matchLabels:
       app: myappserver
       tier: myappdb
-    strategy:
-      type: Recreate
-    template:
-      metadata:
-        labels:
-          app: myappserver
-          tier: myappdb
-      spec:
-        containers:
-        - name: myappdb
-          image: myappdb:latest
-          env:
-          - name: MYSQL_DB
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: myappserver
+        tier: myappdb
+    spec:
+      containers:
+      - name: myappdb
+        image: myappdb:latest
+        env:
+        - name: MYSQL_DB
           value: myapp
-          - name: MYSQL_USER
+        - name: MYSQL_USER
           value: myapp
-          - name: MYSQL_USERPWD
+        - name: MYSQL_USERPWD
           valueFrom:
             secretKeyRef:
-               name: myappdb-pass
-               key: password
-          - name: IP_LIST
+             name: myappdb-pass
+             key: password
+        - name: IP_LIST
           value: "localhost,127.0.0.1,%"
-          - name: MYSQL_INIT_SQL
+        - name: MYSQL_INIT_SQL
           value: /root/initdb.sql
         ports:
         - containerPort: 3306
@@ -71,4 +71,4 @@ spec:
       volumes:
       - name: myappdb-persistent-storage
         persistentVolumeClaim:
-           claimName: myappdb-vol-claim
+          claimName: myappdb-vol-claim
