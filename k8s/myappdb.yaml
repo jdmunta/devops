@@ -47,7 +47,7 @@ spec:
     spec:
       containers:
       - name: myappdb
-        image: myappdb:latest
+        image: jdbabu/myappdb:latest
         env:
         - name: MYSQL_DB
           value: myapp

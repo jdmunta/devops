@@ -10,7 +10,7 @@ spec:
   selector:
     app: myappserver
     tier: frontend
-  type: LoadBalancer
+  type: NodePort
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -44,7 +44,7 @@ spec:
         tier: frontend
     spec:
       containers:
-      - image: myappserver:latest
+      - image: jdbabu/myappserver:latest
         name: myappserver
         ports:
         - containerPort: 8080
