@@ -2,7 +2,6 @@ version: '3'
 services:
   myappdb:
     image: myapp/myappdb:1.0
-  
   myappserver:
     image: myapp/myappserver:1.0
     ports: 
