@@ -1,3 +1,4 @@
+
 Build
 -----
 cp ~/myappapi_war/myappapi.war .
@@ -15,4 +16,4 @@ Run as daemon mapping local volume to persist any file changes:
 
 docker run -dit --name myappserver -p8080:8080 --net net1 -v /Users/jmunta/myappwebapi:/opt/tomcat/webapps myappserver:latest
 
-
+--
